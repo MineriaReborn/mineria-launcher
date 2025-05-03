@@ -16,7 +16,7 @@ body {
   user-select: none;
   background: linear-gradient(rgba(23, 21, 23, 0.4), rgba(23, 21, 23, 0.974)),
     url("../images/background.png") no-repeat center center scroll;
-  backdrop-filter: blur(0px);
+  backdrop-filter: blur(5px);
 }
 
 img {

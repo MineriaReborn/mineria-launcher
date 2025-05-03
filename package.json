@@ -12,17 +12,13 @@
   "scripts": {
     "start": "cross-env-shell NODE_ENV=dev electron .",
     "dev": "nodemon --exec npm start",
-    "dist": "electron-builder",
-    "dist:linux": "electron-builder --linux",
-    "dist:mac": "electron-builder --mac",
-    "dist:all": "electron-builder -mwl"
+    "dist": "electron-builder"
   },
   "license": "CC0",
   "nodemonConfig": {
     "ext": "js,html,css"
   },
   "dependencies": {
-    "discord-rpc": "^4.0.1",
     "electron-updater": "^6.3.9",
     "node-fetch": "^2.7.0",
     "tropolia_core": "^2.0.1"
@@ -103,6 +99,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FlyLonyx/Mineria-launcher.git"
+    "url": "git+https://github.com/MineriaReborn/mineria-launcher.git"
   }
 }
