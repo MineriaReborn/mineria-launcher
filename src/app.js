@@ -77,8 +77,3 @@ autoUpdater.on("download-progress", (progress) => {
   const updateWindow = UpdateWindow.getWindow();
   updateWindow.webContents.send("download-progress", progress);
 });
-
-
-app.on("will-quit", () => {
-  if (client) client.destroy();
-});
