@@ -1,0 +1,108 @@
+{
+  "name": "Mineria-Launcher",
+  "preductname": "Mineria Launcher",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "author": "FlyLonyx, Luuxis",
+  "url": "http://localhost:8080/mineria",
+  "engines": {
+    "node": "22.x.x"
+  },
+  "scripts": {
+    "start": "cross-env-shell NODE_ENV=dev electron .",
+    "dev": "nodemon --exec npm start",
+    "dist": "electron-builder",
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac",
+    "dist:all": "electron-builder -mwl"
+  },
+  "license": "CC0",
+  "nodemonConfig": {
+    "ext": "js,html,css"
+  },
+  "dependencies": {
+    "discord-rpc": "^4.0.1",
+    "electron-updater": "^6.3.9",
+    "node-fetch": "^2.7.0",
+    "tropolia_core": "^2.0.1"
+  },
+  "build": {
+    "appId": "fr.flylonyx.mineria",
+    "productName": "Mineria-Launcher",
+    "artifactName": "${productName}-${os}-${arch}.${ext}",
+    "files": [
+      "src/**/*",
+      "package.json",
+      "LICENSE.md"
+    ],
+    "compression": "maximum",
+    "asar": true,
+    "publish": [
+      {
+        "provider": "github",
+        "releaseType": "release"
+      }
+    ],
+    "win": {
+      "icon": "./src/assets/images/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true
+    },
+    "mac": {
+      "icon": "./src/assets/images/icon.icns",
+      "category": "public.app-category.games",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ]
+    },
+    "linux": {
+      "icon": "./src/assets/images/icon.png",
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "tar.gz",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "directories": {
+      "output": "dist"
+    }
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^35.0.1",
+    "electron-builder": "^25.1.8",
+    "nodemon": "^3.1.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlyLonyx/Mineria-launcher.git"
+  }
+}
