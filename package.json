@@ -5,7 +5,7 @@
   "description": "",
   "main": "src/app.js",
   "author": "FlyLonyx, Luuxis",
-  "url": "http://mineria.ovh/launcher",
+  "url": "https://mineria.ovh/launcher",
   "engines": {
     "node": "22.x.x"
   },
