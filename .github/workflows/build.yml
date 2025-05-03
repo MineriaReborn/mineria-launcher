@@ -5,6 +5,7 @@ on:
 
 jobs:
   create-release:
+    permissions: write-all
     runs-on: ubuntu-latest
     outputs:
       upload_url: ${{ steps.create_release.outputs.upload_url }}
@@ -27,12 +28,13 @@ jobs:
           prerelease: ${{ contains(env.version, 'beta') || contains(env.version, 'alpha') }}
 
   build-launcher:
+    permissions: write-all
     needs: create-release
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [macos-14, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout repository
@@ -55,5 +57,5 @@ jobs:
       - name: Build
         env:
           GH_TOKEN: ${{ secrets.github_token }}
-        run: npm run dist
+        run: npm run release
         shell: bash

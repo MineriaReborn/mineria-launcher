@@ -1,38 +1,59 @@
 {
-  "name": "Mineria-Launcher",
-  "preductname": "Mineria Launcher",
-  "version": "1.0.0",
+  "name": "mineria-launcher",
+  "preductname": "Mineria - Launcher",
+  "version": "1.0.1",
   "description": "",
-  "main": "src/app.js",
-  "author": "FlyLonyx, Luuxis",
-  "url": "http://localhost:8080/mineria",
+  "main": "dist/app.js",
+  "author": "MineriaCorp",
   "engines": {
     "node": "22.x.x"
   },
   "scripts": {
-    "start": "cross-env-shell NODE_ENV=dev electron .",
-    "dev": "nodemon --exec npm start",
-    "dist": "electron-builder",
-    "dist:linux": "electron-builder --linux",
-    "dist:mac": "electron-builder --mac",
-    "dist:all": "electron-builder -mwl"
+    "start": "npm run build && cross-env-shell NODE_ENV=dev electron .",
+    "build": "npm run rm && tsc && npm run copy-files",
+    "rm": "rimraf ./dist && rimraf ./launcher",
+    "copy-files": "copyfiles \"src/**/*.html\" \"src/**/*.css\" \"src/**/*.ttf\" \"src/**/*.woff2\" \"src/**/*.png\" \"src/**/*.icns\" \"src/**/*.ico\" -u 1 dist/",
+    "release": "cross-env-shell NODE_ENV=production \"npm run build && electron-builder\"",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "license": "CC0",
   "nodemonConfig": {
     "ext": "js,html,css"
   },
   "dependencies": {
-    "discord-rpc": "^4.0.1",
-    "electron-updater": "^6.3.9",
-    "node-fetch": "^2.7.0",
-    "tropolia_core": "^2.0.1"
+    "7zip-bin": "^5.2.0",
+    "adm-zip": "^0.5.9",
+    "electron-updater": "^6.6.2",
+    "node-7z": "^3.0.0",
+    "prompt": "^1.2.1",
+    "tar": "^7.4.3",
+    "tslib": "^2.4.1",
+    "unzipper": "^0.12.3"
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.5.7",
+    "@types/node": "^22.15.17",
+    "@types/node-7z": "^2.1.8",
+    "@types/semver": "^7.7.0",
+    "@types/unzipper": "^0.10.11",
+    "concurrently": "^9.1.2",
+    "copyfiles": "^2.4.1",
+    "cross-env": "^7.0.3",
+    "electron": "^36.2.0",
+    "electron-builder": "^26.0.12",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.5.3",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   },
   "build": {
-    "appId": "fr.flylonyx.mineria",
-    "productName": "Mineria-Launcher",
+    "appId": "fr.unknown.mineria",
+    "productName": "Mineria Launcher",
     "artifactName": "${productName}-${os}-${arch}.${ext}",
     "files": [
-      "src/**/*",
+      "dist/**/*",
       "package.json",
       "LICENSE.md"
     ],
@@ -45,7 +66,7 @@
       }
     ],
     "win": {
-      "icon": "./src/assets/images/icon.ico",
+      "icon": "./dist/assets/images/icon.ico",
       "target": [
         {
           "target": "nsis",
@@ -62,7 +83,7 @@
       "runAfterFinish": true
     },
     "mac": {
-      "icon": "./src/assets/images/icon.icns",
+      "icon": "./dist/assets/images/icon.icns",
       "category": "public.app-category.games",
       "target": [
         {
@@ -75,7 +96,7 @@
       ]
     },
     "linux": {
-      "icon": "./src/assets/images/icon.png",
+      "icon": "./dist/assets/images/icon.png",
       "target": [
         {
           "target": "AppImage",
@@ -92,17 +113,11 @@
       ]
     },
     "directories": {
-      "output": "dist"
+      "output": "launcher"
     }
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3",
-    "electron": "^35.0.1",
-    "electron-builder": "^25.1.8",
-    "nodemon": "^3.1.9"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FlyLonyx/Mineria-launcher.git"
+    "url": "git+https://github.com/MineriaReborn/mineria-launcher.git"
   }
 }

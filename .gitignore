@@ -1,2 +1,8 @@
 node-modules
 AppData
+/node_modules
+/dist
+.idea
+/client
+/launcher
+.DS_Store

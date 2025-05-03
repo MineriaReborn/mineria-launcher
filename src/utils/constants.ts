@@ -1,0 +1,1 @@
+export const ONE_GIGA_BYTES = 1073741824;
