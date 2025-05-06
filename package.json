@@ -1,11 +1,11 @@
 {
-  "name": "Mineria",
-  "preductname": "Mineria Launcher",
-  "version": "1.0.1",
+  "name": "Mineria-Launcher",
+  "preductname": "Mineria - Launcher",
+  "version": "1.0.2",
   "description": "",
   "main": "src/app.js",
-  "author": "FlyLonyx, Luuxis",
-  "url": "https://mineria.ovh/launcher",
+  "author": "MineriaCorp",
+  "url": "https://mineria.ovh/files",
   "engines": {
     "node": "22.x.x"
   },
@@ -25,7 +25,7 @@
   },
   "build": {
     "appId": "fr.flylonyx.mineria",
-    "productName": "Mineria-Launcher",
+    "productName": "Mineria",
     "artifactName": "${productName}-${os}-${arch}.${ext}",
     "files": [
       "src/**/*",
