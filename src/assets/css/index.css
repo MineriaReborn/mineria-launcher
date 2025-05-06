@@ -4,6 +4,7 @@
 body {
   background: linear-gradient(#1a191df1, #1a191df1),
     url("../images/background.png") no-repeat center top;
+  backdrop-filter: blur(5px);
   background-size: auto;
   max-width: 400px;
   margin: 0 auto;

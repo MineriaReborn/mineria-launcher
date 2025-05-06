@@ -19,7 +19,7 @@
     position: absolute;
     left: 17px;
     top: 13px;
-    background-image: url("../../images/icon.png");
+    background-image: url("../../images/logo.png");
     background-size: cover;
     width: 50px;
     height: 50px;
@@ -98,6 +98,7 @@
 .player-content {
     position: absolute;
     background-color: #1A191D;
+    opacity: 0.8;
     width: 322px;
     height: 100px;
     top: 310px;
@@ -192,7 +193,7 @@
     background-color: #1A191D;
     border-radius: 7px;
     transition: opacity 1s;
-    opacity: 1;
+    opacity: 0.8;
     left: 140px;
     top: 310px;
 }
@@ -378,7 +379,7 @@
     top: 50px;
     width: 1050px;
     height: 205px;
-    background: linear-gradient(90deg, #151515f9 0%, #3c3c3c00 100%), url("../../images/background.png") no-repeat center center;
+    background: linear-gradient(90deg, #151515f9 0%, #3c3c3c00 100%), url("../../images/header.png") no-repeat center center;
     background-size: cover;
     border-radius: 10px;
 }

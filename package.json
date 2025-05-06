@@ -1,7 +1,7 @@
 {
-  "name": "Mineria-Launcher",
+  "name": "Mineria",
   "preductname": "Mineria Launcher",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "src/app.js",
   "author": "FlyLonyx, Luuxis",

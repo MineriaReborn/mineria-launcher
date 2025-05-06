@@ -235,6 +235,9 @@ class Home {
     document.querySelector(".setting-panel").addEventListener("click", () => {
       changePanel("settings");
     });
+    document.querySelector(".info-button").addEventListener("click", () => {
+      shell.openExternal("https://mineria.ovh/shop");
+    });
   }
 
   async getdate(e) {
