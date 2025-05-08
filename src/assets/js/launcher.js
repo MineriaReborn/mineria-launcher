@@ -48,7 +48,7 @@ class Launcher {
             maximize.classList.toggle("icon-restore-down")
         });
 
-        document.querySelector("#close").addEventListener("click", (e) => {
+        document.querySelector("#close").addEventListener("click", () => {
             ipcRenderer.send("main-window-close");
         })
     }
