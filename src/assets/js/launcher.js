@@ -11,7 +11,7 @@ import Settings from './panels/settings.js';
 class Launcher {
     async init() {
         this.initLog();
-        if (process.platform == "win32") this.initFrame();
+        this.initFrame();
         this.config = await config.GetConfig().then(res => res);
         this.news = await config.GetNews().then(res => res);
         this.whitelisted = await config.getWhiteListed().then(res => res);
@@ -48,7 +48,7 @@ class Launcher {
             maximize.classList.toggle("icon-restore-down")
         });
 
-        document.querySelector("#close").addEventListener("click", () => {
+        document.querySelector("#close").addEventListener("click", (e) => {
             ipcRenderer.send("main-window-close");
         })
     }
