@@ -15,7 +15,7 @@
     bottom: 0;
     width: 85px; 
     height: 100%;
-    background: #1A191D;
+    background: #171717;
     display: grid;
 }
 
@@ -41,8 +41,9 @@
     
 }
 .panel-button-settings:hover{
-    transition: 0.2s all;
+    transition: 0.2s all, transform 0.3s ease;
     cursor: pointer;
+    transform: translateY(-2px);
     
 }
 
@@ -141,7 +142,7 @@
 
  
 .ram-settings {
-    background: #1A191D;
+    background: #171717;
     border-radius: 15px;
     width: 1090px;
     height: 120px;
@@ -242,7 +243,7 @@
 
 
 .java-settings {
-    background: #1A191D;
+    background: #171717;
     border-radius: 15px;
     width: 1090px;
     height: 150px;
@@ -278,6 +279,8 @@
 .java-path-set:hover{
     background: #dd8d31;
     color: #ffffff;
+    transition: transform 0.3s ease;
+    transform: translateY(-2px);
 }
 
 .java-path-set{
@@ -291,11 +294,13 @@
 .java-path-reset:hover{
     background: linear-gradient(90deg,#bababa 0px,#d0d0d0 100%);
     color: rgb(47, 47, 47);
+    transition: transform 0.3s ease;
+    transform: translateY(-2px);
 }
 .path-button {
     display: flex;
     align-items: center;
-    justify-content: center; /* Assure également la centrage horizontal */
+    justify-content: center;
     font: normal normal normal 12px Poppins-Bold;
     border-radius: 6px;
     text-align: center;
@@ -309,7 +314,6 @@
     outline: none;
     margin-right: 40px;
 }
-
 
 .path-file {
     display: none;
@@ -326,7 +330,7 @@
 
 
 .resolution-settings{
-    background: #1A191D;
+    background: #171717;
     border-radius: 15px;
     width: 1090px;
     height: 135px;
@@ -421,7 +425,7 @@
 ****************************************************************************************************************/
 
 .launcher-settings{
-    background: #1A191D;
+    background: #171717;
     border-radius: 15px;
     width: 1090px;
     height: 120px;

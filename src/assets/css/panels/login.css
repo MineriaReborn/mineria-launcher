@@ -34,7 +34,7 @@
     left: 0;
     width: 32%;
     height: 100%;
-    background: #191b1d;
+    background: #171717;
     color: #E1E1E1;
     text-align: center;
 }
@@ -98,25 +98,33 @@
 }
 
 .login-btn {
-    font-family: Poppins-Bold;
-    font-size: 14px;
-    position: absolute;
-    border-radius: 6px;
-    border: none;
     width: 290px;
     height: 50px;
-    background: #cf8127;
-    color: #FCFCFC;
-    cursor: pointer;
     left: 60px;
     top: 400px;
-
+    font-family: Poppins-Medium;
+    font-weight: 600;
+    font-size: 14px;
+    color: #ffa500;
+    background: rgba(255, 165, 0, 0.15);
+    border: 1px solid rgba(255, 140, 0, 0.2);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.4s ease;
+    text-decoration: none;
 }
 
 .login-btn:hover {
-    background: #dd8d31;
-    color: #ffffff;
-    transition: all 0.3s;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 165, 0, 0.10), 0 8px 20px rgba(255, 140, 0, 0.07);
 }
 
 
