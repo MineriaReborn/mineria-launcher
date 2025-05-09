@@ -97,7 +97,7 @@
 
 .player-content {
     position: absolute;
-    background-color: #17171781;
+    background-color: #171717;
     opacity: 1;
     width: 322px;
     height: 100px;
@@ -192,7 +192,7 @@
     position: absolute;
     width: 670px;
     height: 100px;
-    background-color: #17171781;
+    background-color: #171717;
     border-radius: 8px;
     transition: opacity 1s;
     opacity: 1;

@@ -1,7 +1,7 @@
 {
   "name": "Mineria-Launcher",
   "preductname": "Mineria - Launcher",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "src/app.js",
   "author": "MineriaCorp",
