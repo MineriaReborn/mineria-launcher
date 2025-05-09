@@ -3,10 +3,10 @@ const fetch = require("node-fetch")
 let url = pkg.user ? `${pkg.url}/${pkg.user}` : pkg.url
 
 let config = `${url}/launcher/config-launcher/config.json`;
-let news = `${url}/launcher/news-launcher/assets/php/news/GetNews.php`;
 let whitelist = `${url}/launcher/whitelist.json`;
 
 class Config {
+    
     GetConfig() {
         return new Promise((resolve, reject) => {
             fetch(config).then(config => {
@@ -18,15 +18,33 @@ class Config {
     }
 
     async GetNews() {
-        let rss = await fetch(news);
-        if (rss.status === 200) {
-            try {
-                let news = await rss.json();
-                return news;
-            } catch (error) {
-                return false;
-            }
-        } else {
+        try {
+            const rss = await fetch("https://mineria.ovh/api/rss");
+            const text = await rss.text();
+            const parser = new DOMParser();
+            const xml = parser.parseFromString(text, "application/xml");
+            const items = xml.querySelectorAll("item");
+    
+            const newsList = [];
+    
+            items.forEach((item, index) => {
+                const title = item.querySelector("title")?.textContent || "Sans titre";
+                const url = item.querySelector("link")?.textContent || "#";
+                const image = item.querySelector("enclosure")?.getAttribute("url") || "https://mineria.ovh/files/img/default-news.jpg";
+                const pubDate = item.querySelector("pubDate")?.textContent || "";
+                const id = `${index + 1}`;
+    
+                newsList.push({
+                    id,
+                    title,
+                    image,
+                    publish_date: new Date(pubDate).toISOString().split("T").join(" ").split(".")[0],
+                    url
+                });
+            });
+    
+            return newsList;
+        } catch (e) {
             return false;
         }
     }
