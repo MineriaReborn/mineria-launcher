@@ -79,8 +79,6 @@ class Home {
         let info = document.querySelector(".text-download");
         let progressBar = document.querySelector(".progress-bar");
 
-        playBtn.style.background = `#86551d`;
-        playBtn.style.color = `#aeaeae`;
         playBtn.disabled = true;
 
         if (playBtn.classList.contains("stop-animation")) {
