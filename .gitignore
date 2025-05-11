@@ -3,3 +3,5 @@ AppData
 /node_modules
 /dist
 .idea
+/client
+/launcher
