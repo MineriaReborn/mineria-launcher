@@ -19,6 +19,7 @@ export class MineriaClientRunner {
     if (!fs.existsSync(logs)) fs.mkdirSync(logs, { recursive: true });
 
     const nativesPath = path.join(__dirname, `../../client/natives/`)
+    const assetsPath = path.join(__dirname, `../../client/assets/`)
     const gameLibsPaths = fs.readdirSync('./client/libraries').map((lib) => `${path.join(__dirname, `../../client/libraries/`)}${lib}`);
 
     gameLibsPaths.push(`${path.join(__dirname, `../../client/`)}minecraft.jar`);
@@ -39,9 +40,9 @@ export class MineriaClientRunner {
       "--version",
       "1.7.10",
       "--gameDir",
-      "./client",
+      path.join(__dirname, `../../client),
       "--assetsDir",
-      "./client/assets",
+      assetsPath,
       "--assetIndex",
       "1.7.10",
       "--uuid",
