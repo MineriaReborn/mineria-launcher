@@ -40,7 +40,7 @@ export class MineriaClientRunner {
       "--version",
       "1.7.10",
       "--gameDir",
-      path.join(__dirname, `../../client),
+      path.join(__dirname, `../../client`),
       "--assetsDir",
       assetsPath,
       "--assetIndex",
