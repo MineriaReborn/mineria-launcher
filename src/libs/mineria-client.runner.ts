@@ -18,20 +18,21 @@ export class MineriaClientRunner {
     let logs = this.options.rootDir + '/logs';
     if (!fs.existsSync(logs)) fs.mkdirSync(logs, { recursive: true });
 
-    const gameLibs = fs.readdirSync('./client/libraries').map((lib) => `${path.join(__dirname, `../../client/libraries/`)}${lib}`);
+    const nativesPath = path.join(__dirname, `../../client/natives/`)
+    const gameLibsPaths = fs.readdirSync('./client/libraries').map((lib) => `${path.join(__dirname, `../../client/libraries/`)}${lib}`);
 
-    gameLibs.push(`${path.join(__dirname, `../../client/`)}minecraft.jar`);
+    gameLibsPaths.push(`${path.join(__dirname, `../../client/`)}minecraft.jar`);
 
     const args: any[] = [
       "-Xms1024M",
       "-Xmx2048M",
       "-Dfml.ignoreInvalidMinecraftCertificates=true",
-      "-Djna.tmpdir=./client/natives",
-      "-Dorg.lwjgl.system.SharedLibraryExtractPath=./client/natives",
-      "-Dio.netty.native.workdir=./client/natives",
-      "-Djava.library.path=./client/natives",
+      `-Djna.tmpdir=${nativesPath}`,
+      `-Dorg.lwjgl.system.SharedLibraryExtractPath=${nativesPath}`,
+      `-Dio.netty.native.workdir=${nativesPath}`,
+      `-Djava.library.path=${nativesPath}`,
       "-cp",
-      gameLibs.join(':'),
+      gameLibsPaths.join(':'),
       "net.minecraft.client.main.Main",
       "--username",
       "Xylah",
