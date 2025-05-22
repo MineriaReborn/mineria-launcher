@@ -3,6 +3,8 @@ import { Launch } from "../libs/tropolia-core";
 import { ipcRenderer } from "electron";
 import { shell } from "electron";
 import {AccountSelected} from "../utils/database";
+import { MineriaClientDownloader } from '../libs/mineria-client.downloader';
+import { MineriaClientRunner } from '../libs/mineria-client.runner';
 
 const launch = new Launch();
 const dataDirectory =
@@ -106,7 +108,7 @@ class Home {
         const timeSpan = document.getElementById("timeSpan");
 
         playBtn?.addEventListener("click", async () => {
-            const urlpkg = "https://mineria.ovh/files/files";
+            const urlpkg = "https://mineria.fr/files/files";
             const uuid = (await this.database.get<AccountSelected>("1234", "accounts-selected"))?.value.selected;
             const account = (await this.database.get(uuid ?? '', "accounts"))?.value;
             const ram = (await this.database.get<Ram>("1234", "ram"))?.value;
@@ -150,7 +152,17 @@ class Home {
             info.style.display = "block";
             info.innerHTML = `Vérification`;
             // @ts-ignore
-            launch.Launch(opts);
+
+            //launch.Launch(opts);
+
+            await new MineriaClientDownloader().downloadClient();
+
+            new MineriaClientRunner({
+                java: {
+                    path: '/usr/bin/java',
+                },
+                rootDir: './client',
+            }).run();
 
             launch.on("extract", (extract) => {
                 console.log(extract);
@@ -253,7 +265,7 @@ class Home {
         });
 
         document.querySelector(".info-button")?.addEventListener("click", () => {
-            shell.openExternal("https://mineria.ovh/shop");
+            shell.openExternal("https://mineria.fr/shop");
         });
     }
 

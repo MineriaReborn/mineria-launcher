@@ -139,7 +139,6 @@ export default class Launch extends EventEmitter {
         argumentsLogs = argumentsLogs.replaceAll(this.options.authenticator.xuid, '????????')
         argumentsLogs = argumentsLogs.replaceAll(`${this.options.path}/`, '')
         this.emit('data', `Launching with arguments ${argumentsLogs}`);
-
         let minecraftDebug = spawn(java, Arguments, { cwd: logs, detached: this.options.detached })
         minecraftDebug.stdout.on('data', (data) => this.emit('data', data.toString('utf-8')))
         minecraftDebug.stderr.on('data', (data) => this.emit('data', data.toString('utf-8')))

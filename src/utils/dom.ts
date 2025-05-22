@@ -12,7 +12,7 @@ export function addAccount(data: any) {
     const role = document.querySelector(".player-role") as HTMLElement;
 
     if (head && name && role) {
-        head.style.backgroundImage = `url(https://mineria.ovh/api/skin-api/avatars/face/${data.name}/?t=${timestamp})`;
+        head.style.backgroundImage = `url(https://mineria.fr/api/skin-api/avatars/face/${data.name}/?t=${timestamp})`;
         name.textContent = data.name;
         role.textContent = data.user_info.role.name;
         role.style.color = data.user_info.role.color;

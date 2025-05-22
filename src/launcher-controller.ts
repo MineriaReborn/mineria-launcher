@@ -90,7 +90,7 @@ export default class Launcher {
     private async loadAccounts(): Promise<void> {
         const accounts = await this.db.getAll<AccountData>("accounts");
         const selectedAccount = (await this.db.get<AccountSelected>("1234", "accounts-selected"))?.value.selected;
-        const azuriom = new Azuriom("https://mineria.ovh");
+        const azuriom = new Azuriom("https://mineria.fr");
 
         if (!accounts.length) {
             changePanel("login");

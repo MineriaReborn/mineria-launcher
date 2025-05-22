@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-const baseUrl = "https://mineria.ovh/files/";
+const baseUrl = "https://mineria.fr/files/";
 const CONFIG_URL = `${baseUrl}/launcher/config-launcher/config.json`;
 const WHITELIST_URL = `${baseUrl}/launcher/whitelist.json`;
 
@@ -40,7 +40,7 @@ class Config {
 
     async GetNews() {
         try {
-            const res = await fetch("https://mineria.ovh/api/rss");
+            const res = await fetch("https://mineria.fr/api/rss");
             const text = await res.text();
             const parser = new DOMParser();
             const xml = parser.parseFromString(text, "application/xml");
@@ -51,7 +51,7 @@ class Config {
                 url: item.querySelector("link")?.textContent ?? "#",
                 image:
                     item.querySelector("enclosure")?.getAttribute("url") ??
-                    "https://mineria.ovh/files/img/default-news.jpg",
+                    "https://mineria.fr/files/img/default-news.jpg",
                 publish_date: new Date(
                     item.querySelector("pubDate")?.textContent ?? ""
                 )

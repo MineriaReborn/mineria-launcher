@@ -47,7 +47,7 @@ class Login {
         const infoLogin: HTMLElement = <HTMLElement>document.querySelector('.info-login');
         const loginBtn: HTMLButtonElement = <HTMLButtonElement>document.querySelector(".login-btn");
         const oublieBtn: HTMLButtonElement = <HTMLButtonElement>document.querySelector(".password-reset");
-        const azuriom = new Azuriom("https://mineria.ovh");
+        const azuriom = new Azuriom("https://mineria.fr");
         const loginBtn2f: HTMLButtonElement = <HTMLButtonElement>document.querySelector('.login-btn-2f');
         const a2finput: HTMLInputElement = <HTMLInputElement>document.querySelector('.A2F');
         const infoLogin2f: HTMLElement = <HTMLElement>document.querySelector('.info-login-2f');
@@ -112,7 +112,7 @@ class Login {
 
         // Password reset button
         oublieBtn.addEventListener("click", async () => {
-            shell.openExternal("https://mineria.ovh/user/password/reset");
+            shell.openExternal("https://mineria.fr/user/password/reset");
         });
 
         // Cancel 2FA and reset form
