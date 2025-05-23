@@ -110,12 +110,13 @@ class Home {
         playBtn?.addEventListener("click", async () => {
             const urlpkg = "https://mineria.fr/files/files";
             const uuid = (await this.database.get<AccountSelected>("1234", "accounts-selected"))?.value.selected;
-            const account = (await this.database.get(uuid ?? '', "accounts"))?.value;
+            const account = (await this.database.get<{access_token: string; uuid: string; name: string;}>(uuid ?? '', "accounts"))?.value;
             const ram = (await this.database.get<Ram>("1234", "ram"))?.value;
             const resolution = (await this.database.get<Resolution>("1234", "screen"))?.value;
             const launcherSettings = (await this.database.get<LauncherSettings>("1234", "launcher"))?.value
             const javaPath = (await this.database.get<{ path: string }>("1234", "java-path"))?.value?.path;
 
+            console.log(account)
             playBtn.disabled = true;
 
             if (playBtn.classList.contains("stop-animation")) {
@@ -158,6 +159,10 @@ class Home {
             await new MineriaClientDownloader().downloadClient();
 
             new MineriaClientRunner({
+                account: {
+                    access_token: account.access_token,
+                    uuid: account.uuid,
+                },
                 java: {
                     path: '/usr/bin/java',
                 },

@@ -1,24 +1,41 @@
-import fs from 'fs';
-import { spawn } from 'child_process';
-import path from 'path';
+import fs from 'node:fs';
+import { spawn } from 'node:child_process';
+import path from 'node:path';
+import os from 'node:os';
 
 export class MineriaClientRunner {
 
   constructor(
     private readonly options: {
       rootDir: string;
+      account: {
+        access_token: string;
+        uuid: string;
+      };
       java: {
         path: string
       };
     }
   ) {}
 
+
   run() {
     let java: any = this.options.java.path;
-    let logs = this.options.rootDir + '/logs';
-    if (!fs.existsSync(logs)) fs.mkdirSync(logs, { recursive: true });
+    let logs = this.options.rootDir;
 
-    const nativesPath = path.join(__dirname, `../../client/natives/`)
+
+    const platform = os.platform();
+    const arch = os.arch();
+
+    let nativesPath: string;
+    if(platform === 'win32') {
+      nativesPath = path.join(__dirname, `../../client/natives/`)
+    } else if (platform === 'darwin' && arch === 'arm64') {
+      nativesPath = path.join(__dirname, `../../client/natives/osx/arm64`)
+    } else if (platform === 'darwin' && arch === 'x64') {
+      nativesPath = path.join(__dirname, `../../client/natives/osx`)
+    }
+
     const assetsPath = path.join(__dirname, `../../client/assets/`)
     const gameLibsPaths = fs.readdirSync('./client/libraries').map((lib) => `${path.join(__dirname, `../../client/libraries/`)}${lib}`);
 
@@ -46,9 +63,9 @@ export class MineriaClientRunner {
       "--assetIndex",
       "1.7.10",
       "--uuid",
-      'this.options.uuid',
+      this.options.account.uuid,
       "--accessToken",
-      'this.options.accessToken',
+      this.options.account.access_token,
       "--userProperties",
       "{}",
       "--userType",
@@ -60,6 +77,12 @@ export class MineriaClientRunner {
     ];
 
     const childProcess = spawn(java, args, { cwd: logs, detached: false });
+    childProcess.stderr.on('data', (data: any) => {
+      console.log("stderr ", data.toString('utf-8'));
+    });
+    childProcess.stdout.on('data', (data: any) => {
+      console.log("stdout ", data.toString('utf-8'));
+    });
     childProcess.on('close', (code, signal) => {
       console.log('closed', code, signal)
     })

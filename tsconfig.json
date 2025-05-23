@@ -8,7 +8,7 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
-    "sourceMap": true
+    "sourceMap": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
