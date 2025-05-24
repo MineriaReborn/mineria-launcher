@@ -181,7 +181,7 @@
 
 /****************************************************************************************************************
 *                                                                                                               *
-*                                               Launch Content                                                  *
+*                                               LaunchJs Content                                                  *
 *                                                                                                               *
 *                                                                                                               *
 ****************************************************************************************************************/
@@ -235,14 +235,6 @@
     color: #D9D6E4;
     top: 30px;
     left: 230px;
-}
-
-.time-info {
-    position: absolute;
-    font: normal normal normal 12px Poppins-Regular;
-    color: #D9D6E4;
-    top: 30px;
-    right: 90px;
 }
 
 .progress-bar {

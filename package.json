@@ -13,7 +13,9 @@
     "build": "npm run rm && tsc && npm run copy-files",
     "rm": "rimraf ./dist",
     "copy-files": "copyfiles \"src/**/*.html\" \"src/**/*.css\" \"src/**/*.ttf\" \"src/**/*.woff2\" \"src/**/*.png\" -u 1 dist/",
-    "dist": "electron-builder"
+    "dist": "cross-env-shell NODE_ENV=production electron-builder",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "license": "CC0",
   "nodemonConfig": {
@@ -22,23 +24,26 @@
   "dependencies": {
     "7zip-bin": "^5.2.0",
     "adm-zip": "^0.5.9",
+    "electron-updater": "^6.6.2",
     "node-7z": "^3.0.0",
-    "node-fetch": "^2.7.0",
     "prompt": "^1.2.1",
-    "tslib": "^2.4.1"
+    "tar": "^7.4.3",
+    "tslib": "^2.4.1",
+    "unzipper": "^0.12.3"
   },
   "devDependencies": {
     "@types/adm-zip": "^0.5.7",
     "@types/node": "^22.15.17",
     "@types/node-7z": "^2.1.8",
     "@types/semver": "^7.7.0",
+    "@types/unzipper": "^0.10.11",
     "concurrently": "^9.1.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^7.0.3",
     "electron": "^36.2.0",
     "electron-builder": "^26.0.12",
-    "electron-updater": "^6.6.2",
     "nodemon": "^3.1.10",
+    "prettier": "^3.5.3",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
@@ -108,7 +113,7 @@
       ]
     },
     "directories": {
-      "output": "dist"
+      "output": "launcher"
     }
   },
   "repository": {

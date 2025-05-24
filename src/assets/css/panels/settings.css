@@ -213,7 +213,7 @@
 .slider-line span {
     display: block;
     height: 100%;
-    width: 0%;
+    width: 0;
     background: #cf8127;
     transition: background-color .2s;
 }
@@ -232,94 +232,6 @@
     top: 40px;
     position: absolute;
 }
-
-
-/****************************************************************************************************************
-*                                                                                                               *
-*                                               Java Content                                                    *
-*                                                                                                               *
-*                                                                                                               *
-****************************************************************************************************************/
-
-
-.java-settings {
-    background: #171717;
-    border-radius: 15px;
-    width: 1090px;
-    height: 150px;
-    top: 200px;
-    left: 113px;
-    position: absolute;
-}
-
-.path {
-    min-width: 27%;
-    font: normal normal normal 11px Poppins-Regular;
-    border-radius: 6px;
-    padding: 8px 16px;
-    margin: 0 40px;
-    margin-top: 2%;
-    color: #6C6979;
-    background-color: #222126;
-    user-select: text;
-    transition: color .2s, background-color .2s;
-    border: none;
-    outline: none;
-}
-.path-content {
-    display: flex;
-    position: relative;
-    top: 13px;
-}
-
-.java-path-box {
-    display: flex;
-}
-
-.java-path-set:hover{
-    background: #dd8d31;
-    color: #ffffff;
-    transition: transform 0.3s ease;
-    transform: translateY(-2px);
-}
-
-.java-path-set{
-    color: #FCFCFC;
-    background: #cf8127;
-}
-.java-path-reset{
-    background: linear-gradient(90deg,#ADADAD 0px,#C0C0C0 100%);
-    color: #2B2B2B;
-}
-.java-path-reset:hover{
-    background: linear-gradient(90deg,#bababa 0px,#d0d0d0 100%);
-    color: rgb(47, 47, 47);
-    transition: transform 0.3s ease;
-    transform: translateY(-2px);
-}
-.path-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font: normal normal normal 12px Poppins-Bold;
-    border-radius: 6px;
-    text-align: center;
-    width: 120px;
-    height: 38px;
-    cursor: pointer;
-    margin-top: 22px;
-    margin-left: -20px;
-    transition: color .2s, background-color .2s;
-    border: none;
-    outline: none;
-    margin-right: 40px;
-}
-
-.path-file {
-    display: none;
-    pointer-events: none;
-}
-
 
 /****************************************************************************************************************
 *                                                                                                               *
