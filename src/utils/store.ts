@@ -1,4 +1,3 @@
-import { ONE_GIGA_BYTES } from './constants';
 import { Memory } from '../types/memory';
 import { Resolution } from '../types/resolution';
 import { LauncherSettings } from '../types/launcher-settings';
@@ -22,8 +21,8 @@ export type State = {
 
 const initialState: State = {
   [StoreItem.Memory]: {
-    min: ONE_GIGA_BYTES,
-    max: ONE_GIGA_BYTES * 2,
+    min: 1,
+    max: 2,
   },
   [StoreItem.Resolution]: {
     width: 1280,

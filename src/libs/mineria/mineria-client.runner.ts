@@ -129,14 +129,14 @@ export class MineriaClientRunner {
 
   private attachProcessListeners(childProcess: ChildProcessWithoutNullStreams): void {
     childProcess.stdout.on('data', (data) => {
-      if (process.env.NODE_ENV === 'dev') {
+      if (process.env.NODE_ENV !== 'dev') {
         console.log('stdout', data.toString('utf-8'));
       }
       this.eventEmitter.emit('data', data.toString('utf-8'));
     });
 
     childProcess.stderr.on('data', (data) => {
-      if (process.env.NODE_ENV === 'dev') {
+      if (process.env.NODE_ENV !== 'dev') {
         console.log('stdout', data.toString('utf-8'));
       }
       this.eventEmitter.emit('data', data.toString('utf-8'));
