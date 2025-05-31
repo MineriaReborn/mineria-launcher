@@ -13,7 +13,7 @@
     "build": "npm run rm && tsc && npm run copy-files",
     "rm": "rimraf ./dist && rimraf ./launcher",
     "copy-files": "copyfiles \"src/**/*.html\" \"src/**/*.css\" \"src/**/*.ttf\" \"src/**/*.woff2\" \"src/**/*.png\" -u 1 dist/",
-    "dist": "cross-env-shell NODE_ENV=production electron-builder",
+    "release": "cross-env-shell NODE_ENV=production \"npm run build && electron-builder\"",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },

@@ -57,5 +57,5 @@ jobs:
       - name: Build
         env:
           GH_TOKEN: ${{ secrets.github_token }}
-        run: npm run dist
+        run: npm run release
         shell: bash
