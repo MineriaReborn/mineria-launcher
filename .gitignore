@@ -5,3 +5,4 @@ AppData
 .idea
 /client
 /launcher
+.DS_Store
