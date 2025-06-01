@@ -29,7 +29,7 @@ const initialState: State = {
     height: 720,
   },
   [StoreItem.Launcher]: {
-    close: 'open-launcher',
+    close: 'close-launcher',
   },
   [StoreItem.Account]: undefined,
   [StoreItem.MineriaConfig]: undefined,

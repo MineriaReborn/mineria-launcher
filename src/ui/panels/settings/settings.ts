@@ -86,6 +86,7 @@ export default class Settings {
       }
       if (!closeLauncher.checked) closeLauncher.checked = true;
       launcher.close = 'close-launcher';
+      this.store.upsert(StoreItem.Launcher, { close: 'close-launcher' });
     });
 
     closeAll.addEventListener('change', () => {
