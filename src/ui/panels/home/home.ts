@@ -110,7 +110,6 @@ export default class Home {
 
       eventEmitter.on('progress', (progress, size) => {
         const percentage = (progress / size) * 100;
-        progressBar.style.display = 'block';
         info.innerHTML = `Téléchargement ${percentage.toFixed(0)}%`;
         progressBar.value = progress;
         progressBar.max = size;
@@ -118,7 +117,6 @@ export default class Home {
 
       eventEmitter.on('check', (progress, size) => {
         const percentage = (progress / size) * 100;
-        progressBar.style.display = 'block';
         info.innerHTML = `Vérification ${percentage.toFixed(0)}%`;
         progressBar.value = progress;
         progressBar.max = size;
@@ -128,39 +126,27 @@ export default class Home {
         playBtn.style.filter = 'grayscale(100%)';
         playBtn.style.pointerEvents = 'none';
         info.innerHTML = 'Mineria est lancé';
-      });
-
-      eventEmitter.on('data', () => {
-        if (launcherSettings.close === 'close-launcher') {
-          ipcRenderer.send('main-window-hide');
-        }
 
         if (launcherSettings.close === 'close-launcher') {
           setInterval(() => {
             ipcRenderer.send('main-window-close');
-          }, 10000);
+          }, 15_000);
         }
       });
 
       eventEmitter.on('close', () => {
         playBtn.disabled = false;
-
-        playBtn.style.color = '#4caf50';
-        playBtn.style.background = 'rgba(76, 175, 80, 0.15)';
-        playBtn.style.border = '1px solid rgba(76, 175, 80, 0.2)';
-        playBtn.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.1)';
-
-        if (launcherSettings.close === 'close-launcher') {
-          ipcRenderer.send('main-window-show');
-        }
-      });
-
-      eventEmitter.on('error', (err) => {
-        console.log(err);
+        playBtn.style.filter = 'grayscale(0%)';
+        playBtn.style.pointerEvents = 'all';
+        info.innerHTML = 'Attente de lancement.';
+        progressBar.value = 0;
+        progressBar.max = 0;
       });
 
       await downloader.install();
       await runner.run();
+
+      eventEmitter.emit('finished');
     });
   }
 

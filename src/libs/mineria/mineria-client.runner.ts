@@ -4,7 +4,6 @@ import os from 'node:os';
 import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import EventEmitter from 'node:events';
 import { JavaDownloader } from './java-downloader';
-import { Store, StoreItem } from '../../utils/store';
 import { Resolution } from '../../types/resolution';
 import { Account } from '../../types/account';
 import { Memory } from '../../types/memory';
@@ -132,17 +131,15 @@ export class MineriaClientRunner {
       if (process.env.NODE_ENV === 'dev') {
         console.log('stdout', data.toString('utf-8'));
       }
-      this.eventEmitter.emit('data', data.toString('utf-8'));
     });
 
     childProcess.stderr.on('data', (data) => {
       if (process.env.NODE_ENV === 'dev') {
-        console.log('stdout', data.toString('utf-8'));
+        console.log('stderr', data.toString('utf-8'));
       }
-      this.eventEmitter.emit('data', data.toString('utf-8'));
     });
 
-    childProcess.on('close', () => {
+    childProcess.on('exit', () => {
       this.eventEmitter.emit('close');
     });
   }

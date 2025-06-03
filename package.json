@@ -1,10 +1,10 @@
 {
   "name": "mineria-launcher",
-  "preductname": "Mineria - Launcher",
-  "version": "1.0.2",
+  "productname": "Mineria - Launcher",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/app.js",
-  "author": "MineriaCorp",
+  "author": "Mineria",
   "engines": {
     "node": "22.x.x"
   },

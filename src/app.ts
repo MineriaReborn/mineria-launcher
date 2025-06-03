@@ -55,3 +55,6 @@ autoUpdater.on('update-downloaded', () => autoUpdater.quitAndInstall());
 autoUpdater.on('download-progress', (progress) =>
   getUpdaterWindow()?.webContents.send('download-progress', progress),
 );
+autoUpdater.on('error', (error) => {
+  console.log(error);
+});

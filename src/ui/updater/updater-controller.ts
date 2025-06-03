@@ -37,10 +37,10 @@ class UpdateController {
     this.message?.classList.add('opacity');
 
     await sleep(1000);
-    await this.maintenanceCheck();
+    await this.loadConfig();
   }
 
-  async maintenanceCheck(): Promise<void> {
+  async loadConfig(): Promise<void> {
     if (process.env.NODE_ENV === 'dev') {
       this.startLauncher();
       return;

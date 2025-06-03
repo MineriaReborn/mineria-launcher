@@ -25,15 +25,15 @@ export class MineriaClientDownloader {
   ) {}
 
   public async install(): Promise<void> {
-    const files = await this.fetchFileList();
-    if (!files) return;
+    const newFiles = await this.fetchFileList();
+    if (!newFiles) return;
 
-    const totalSize = MineriaClientDownloader.calculateTotalSize(files);
+    const totalSize = MineriaClientDownloader.calculateTotalSize(newFiles);
 
     let verifiedBytes = 0;
     let downloadedBytes = 0;
 
-    for (const file of files) {
+    for (const file of newFiles) {
       const fullPath = path.join(MineriaClientDownloader.getClientPath(), file.path);
       const needsDownload = await this.shouldDownloadFile(fullPath, file.hash);
 
@@ -53,14 +53,17 @@ export class MineriaClientDownloader {
     const config = this.store.get(StoreItem.MineriaConfig);
 
     const ignoreList = new Set(
-      ...(config?.ignored ?? []).concat([
+      (config?.ignored ?? []).concat([
+        'assets',
         'java',
-        'resourcepacks',
-        'shaderpacks',
-        'crash-reports',
+        'libraries',
         'logs',
+        'natives',
+        'resourcepacks',
         'saves',
         'settings',
+        'shaderpacks',
+        'crash-reports',
         'minecraft.enc',
         'wrapper.jar',
         'options.txt',
@@ -68,9 +71,7 @@ export class MineriaClientDownloader {
       ]),
     );
 
-    await new UnusedFilesCleaner(ignoreList).deleteUnusedFiles(files);
-
-    this.eventEmitter.emit('finished');
+    await new UnusedFilesCleaner(ignoreList).deleteUnusedFiles(newFiles);
     console.log('Client files downloaded');
   }
 
@@ -101,7 +102,7 @@ export class MineriaClientDownloader {
       if (!response.ok) throw new Error(`Failed to fetch file list: ${response.statusText}`);
       return await response.json();
     } catch (error) {
-      this.eventEmitter.emit('error', error);
+      console.error(error);
       return null;
     }
   }
@@ -114,7 +115,7 @@ export class MineriaClientDownloader {
       const actualHash = await this.computeFileHash(filePath);
       return actualHash !== expectedHash;
     } catch (error) {
-      this.eventEmitter.emit('error', error);
+      console.error(error);
       return true;
     }
   }
@@ -134,7 +135,7 @@ export class MineriaClientDownloader {
 
       const response = await fetch(file.url);
       if (!response.ok || !response.body) {
-        this.eventEmitter.emit('error', `Failed to download: ${file.url}`);
+        console.error(`Failed to download: ${file.url}`);
         return;
       }
 

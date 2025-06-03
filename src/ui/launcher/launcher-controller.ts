@@ -97,7 +97,7 @@ class Launcher {
 
     const { account: refreshedAccount, message } = await this.azuriom.verify(account);
 
-    if (!refreshedAccount || message) {
+    if (!refreshedAccount || message?.length) {
       this.store.remove(StoreItem.Account);
       this.hidePreload();
       return changePanel('login');
