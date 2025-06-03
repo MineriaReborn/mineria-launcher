@@ -29,7 +29,7 @@ export class JavaDownloader {
     }
 
     if (platform === 'win32') {
-      return path.join(this.clientPath, 'java', 'java8', 'bin', 'java.exe');
+      return path.join(this.clientPath, 'java', 'java8', 'bin', 'javaw.exe');
     }
 
     return path.join(this.clientPath, 'java', 'java8', 'bin', 'java');

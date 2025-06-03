@@ -110,6 +110,7 @@ export default class Home {
 
       eventEmitter.on('progress', (progress, size) => {
         const percentage = (progress / size) * 100;
+        console.log('progress ', percentage);
         info.innerHTML = `Téléchargement ${percentage.toFixed(0)}%`;
         progressBar.value = progress;
         progressBar.max = size;
@@ -117,6 +118,7 @@ export default class Home {
 
       eventEmitter.on('check', (progress, size) => {
         const percentage = (progress / size) * 100;
+        console.log('check ', percentage);
         info.innerHTML = `Vérification ${percentage.toFixed(0)}%`;
         progressBar.value = progress;
         progressBar.max = size;
