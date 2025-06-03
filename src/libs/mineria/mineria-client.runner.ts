@@ -95,10 +95,8 @@ export class MineriaClientRunner {
     return [
       `-Xms${memory.min * 1024}M`,
       `-Xmx${memory.max * 1024}M`,
-      '-Dfml.ignoreInvalidMinecraftCertificates=true',
-      `-Djna.tmpdir=${nativesPath}`,
+      `-XX:ReservedCodeCacheSize=512m`,
       `-Dorg.lwjgl.system.SharedLibraryExtractPath=${nativesPath}`,
-      `-Dio.netty.native.workdir=${nativesPath}`,
       `-Djava.library.path=${nativesPath}`,
       '-cp',
       classpath,
