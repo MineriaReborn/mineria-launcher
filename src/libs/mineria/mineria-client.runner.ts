@@ -51,6 +51,12 @@ export class MineriaClientRunner {
     const childProcess = spawn(this.javaPath, args, {
       cwd: gameDir,
       detached: launcherSettings.close === 'close-launcher',
+      env: {
+        SHIM_MCCOMPAT: '0x800000001',
+        GPU_MAX_HEAP_SIZE: '100',
+        GPU_USE_SYNC_OBJECTS: '1',
+        __GL_THREADED_OPTIMIZATIONS: '1',
+      },
     });
 
     this.attachProcessListeners(childProcess);
