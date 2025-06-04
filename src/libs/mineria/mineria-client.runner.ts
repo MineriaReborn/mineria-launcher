@@ -56,6 +56,16 @@ export class MineriaClientRunner {
         GPU_MAX_HEAP_SIZE: '100',
         GPU_USE_SYNC_OBJECTS: '1',
         __GL_THREADED_OPTIMIZATIONS: '1',
+        __NV_PRIME_RENDER_OFFLOAD: '1',
+        __GLX_VENDOR_LIBRARY_NAME: 'nvidia',
+        CUDA_VISIBLE_DEVICES: '0',
+        __GL_SYNC_TO_VBLANK: '0',
+        __GL_GSYNC_ALLOWED: '0',
+        __GL_SHADER_CACHE: '1',
+        __GL_SHADER_CACHE_SIZE: '100',
+        MESA_GLTHREAD: 'true',
+        AMD_DEBUG: 'nodisablevcache,nohiz,precompile',
+        R600_DEBUG: 'nosb',
       },
     });
 
