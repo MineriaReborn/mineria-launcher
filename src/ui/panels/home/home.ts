@@ -98,7 +98,7 @@ export default class Home {
 
       const eventEmitter = new EventEmitter();
       const clientPath = MineriaClientDownloader.getClientPath();
-      const javaDownloader = new JavaDownloader(clientPath);
+      const javaDownloader = new JavaDownloader(clientPath, eventEmitter);
       const downloader = new MineriaClientDownloader(eventEmitter, this.store);
       const runner = new MineriaClientRunner(javaDownloader, eventEmitter, {
         account,
@@ -108,23 +108,24 @@ export default class Home {
         launcherSettings,
       });
 
-      eventEmitter.on('progress', (progress, size) => {
+      eventEmitter.on('client_download_progress', (progress, size) => {
         const percentage = (progress / size) * 100;
-        console.log('progress ', percentage);
         info.innerHTML = `Téléchargement ${percentage.toFixed(0)}%`;
         progressBar.value = progress;
         progressBar.max = size;
       });
 
-      eventEmitter.on('check', (progress, size) => {
-        const percentage = (progress / size) * 100;
-        console.log('check ', percentage);
-        info.innerHTML = `Vérification ${percentage.toFixed(0)}%`;
-        progressBar.value = progress;
-        progressBar.max = size;
+      eventEmitter.on('client_downloaded', () => {
+        info.innerHTML = `Client téléchargé`;
+        progressBar.value = 100;
+        progressBar.max = 100;
       });
 
-      eventEmitter.on('finished', () => {
+      eventEmitter.on('java_download_progress', () => {
+        info.innerHTML = `Téléchargement de Java 8`;
+      });
+
+      eventEmitter.on('game_started', () => {
         playBtn.style.filter = 'grayscale(100%)';
         playBtn.style.pointerEvents = 'none';
         info.innerHTML = 'Mineria est lancé';
@@ -136,7 +137,7 @@ export default class Home {
         }
       });
 
-      eventEmitter.on('close', () => {
+      eventEmitter.on('game_closed', () => {
         playBtn.disabled = false;
         playBtn.style.filter = 'grayscale(0%)';
         playBtn.style.pointerEvents = 'all';
@@ -148,7 +149,7 @@ export default class Home {
       await downloader.install();
       await runner.run();
 
-      eventEmitter.emit('finished');
+      eventEmitter.emit('game_started');
     });
   }
 

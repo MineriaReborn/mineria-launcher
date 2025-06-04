@@ -6,11 +6,15 @@ import { pipeline } from 'node:stream';
 import { promisify } from 'node:util';
 import * as tar from 'tar';
 import unzipper from 'unzipper';
+import EventEmitter from 'node:events';
 
 const streamPipeline = promisify(pipeline);
 
 export class JavaDownloader {
-  constructor(private readonly clientPath: string) {}
+  constructor(
+    private readonly clientPath: string,
+    private readonly eventEmitter: EventEmitter,
+  ) {}
 
   public async installJavaIfNotPresent(): Promise<void> {
     if (fs.existsSync(this.getJavaBinaryPath())) {
@@ -18,6 +22,7 @@ export class JavaDownloader {
       return;
     }
 
+    this.eventEmitter.emit('java_download_progress');
     await this.install();
   }
 

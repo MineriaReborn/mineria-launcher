@@ -11,6 +11,23 @@ import { UnusedFilesCleaner } from './unused-files.cleaner';
 
 const streamPipeline = promisify(pipeline);
 
+const IGNORE_LIST = [
+  'assets',
+  'java',
+  'libraries',
+  'logs',
+  'natives',
+  'resourcepacks',
+  'saves',
+  'settings',
+  'shaderpacks',
+  'crash-reports',
+  'minecraft.enc',
+  'wrapper.jar',
+  'options.txt',
+  'optionsof.txt',
+];
+
 type DownloadableFile = {
   path: string;
   size: number;
@@ -25,54 +42,41 @@ export class MineriaClientDownloader {
   ) {}
 
   public async install(): Promise<void> {
-    const newFiles = await this.fetchFileList();
-    if (!newFiles) return;
+    const downloadableFiles = await this.fetchDownloadableFiles();
+    if (!downloadableFiles) return;
 
-    const totalSize = MineriaClientDownloader.calculateTotalSize(newFiles);
-
+    const totalSize = MineriaClientDownloader.calculateTotalSize(downloadableFiles);
     let verifiedBytes = 0;
     let downloadedBytes = 0;
 
-    for (const file of newFiles) {
+    const downloadQueue: { file: DownloadableFile; fullPath: string }[] = [];
+
+    const filesToDownload = downloadableFiles.map(async (file) => {
       const fullPath = path.join(MineriaClientDownloader.getClientPath(), file.path);
       const needsDownload = await this.shouldDownloadFile(fullPath, file.hash);
 
       if (!needsDownload) {
         verifiedBytes += file.size;
-        this.eventEmitter.emit('check', verifiedBytes, totalSize);
-        continue;
+        return;
       }
 
+      downloadQueue.push({ file, fullPath });
+    });
+
+    await Promise.all(filesToDownload);
+
+    console.log(`${downloadQueue.length} new files to download`);
+
+    for (const { file, fullPath } of downloadQueue) {
       await this.downloadAndStoreFile(file, fullPath, (chunkSize) => {
         downloadedBytes += chunkSize;
         const totalProgress = verifiedBytes + downloadedBytes;
-        this.eventEmitter.emit('progress', totalProgress, totalSize);
+        this.eventEmitter.emit('client_download_progress', totalProgress, totalSize);
       });
     }
 
-    const config = this.store.get(StoreItem.MineriaConfig);
-
-    const ignoreList = new Set(
-      (config?.ignored ?? []).concat([
-        'assets',
-        'java',
-        'libraries',
-        'logs',
-        'natives',
-        'resourcepacks',
-        'saves',
-        'settings',
-        'shaderpacks',
-        'crash-reports',
-        'minecraft.enc',
-        'wrapper.jar',
-        'options.txt',
-        'optionsof.txt',
-      ]),
-    );
-
-    await new UnusedFilesCleaner(ignoreList).deleteUnusedFiles(newFiles);
-    console.log('Client files downloaded');
+    await this.cleanupUnusedFiles(downloadableFiles);
+    this.eventEmitter.emit('client_downloaded');
   }
 
   static getClientPath(): string {
@@ -96,14 +100,20 @@ export class MineriaClientDownloader {
     return files.reduce((acc, file) => acc + file.size, 0);
   }
 
-  private async fetchFileList(): Promise<DownloadableFile[] | null> {
+  private async cleanupUnusedFiles(files: DownloadableFile[]): Promise<void> {
+    const config = this.store.get(StoreItem.MineriaConfig);
+    const ignoreList = new Set((config?.ignored ?? []).concat(IGNORE_LIST));
+    await new UnusedFilesCleaner(ignoreList).deleteUnusedFiles(files);
+  }
+
+  private async fetchDownloadableFiles(): Promise<DownloadableFile[]> {
     try {
       const response = await fetch('https://launcher.mineria.ovh/launcher/downloads/');
       if (!response.ok) throw new Error(`Failed to fetch file list: ${response.statusText}`);
       return await response.json();
     } catch (error) {
       console.error(error);
-      return null;
+      return [];
     }
   }
 

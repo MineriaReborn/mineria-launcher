@@ -154,7 +154,7 @@ export class MineriaClientRunner {
     });
 
     childProcess.on('exit', () => {
-      this.eventEmitter.emit('close');
+      this.eventEmitter.emit('game_closed');
     });
   }
 
