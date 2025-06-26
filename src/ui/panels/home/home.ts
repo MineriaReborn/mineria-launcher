@@ -75,10 +75,16 @@ export default class Home {
 
     playBtn?.addEventListener('click', async () => {
       const account = this.store.get(StoreItem.Account);
-      const config = Config.getConfig();
+      /*const config = Config.getConfig();*/
       playBtn.disabled = true;
 
-      if (
+      if (!account) {
+        info.innerHTML = 'Impossible de se connecter au service. Veuillez réessayer ultérieurement.';
+        playBtn.disabled = false;
+        return;
+      }
+
+      /*if (
         !account ||
         !config ||
         (config.maintenance && !config.whitelist.includes(account.username))
@@ -87,7 +93,7 @@ export default class Home {
         playBtn.style.filter = 'grayscale(100%)';
         playBtn.style.pointerEvents = 'none';
         return;
-      }
+      }*/
 
       const memory = this.store.get(StoreItem.Memory);
       const resolution = this.store.get(StoreItem.Resolution);
