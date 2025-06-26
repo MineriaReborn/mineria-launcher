@@ -77,12 +77,18 @@ export class MineriaClientRunner {
     const arch = os.arch();
 
     if (platform === 'win32') {
-      return this.resolveRelativePath('natives');
+      return this.resolveRelativePath('natives/win');
     } else if (platform === 'darwin') {
       if (arch === 'arm64') {
         return this.resolveRelativePath('natives/osx/arm64');
       } else if (arch === 'x64') {
-        return this.resolveRelativePath('natives/osx');
+        return this.resolveRelativePath('natives/osx/x86_64');
+      }
+    } else if (platform === 'linux') {
+      if (arch === 'arm64') {
+        return this.resolveRelativePath('natives/linux/arm64');
+      } else if (arch === 'x64') {
+        return this.resolveRelativePath('natives/linux/x86_64');
       }
     }
 
