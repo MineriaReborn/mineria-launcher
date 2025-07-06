@@ -81,13 +81,13 @@ export class MineriaClientRunner {
     } else if (platform === 'darwin') {
       if (arch === 'arm64') {
         return this.resolveRelativePath('natives/osx/arm64');
-      } else if (arch === 'x64') {
+      } else {
         return this.resolveRelativePath('natives/osx/x86_64');
       }
     } else if (platform === 'linux') {
       if (arch === 'arm64') {
         return this.resolveRelativePath('natives/linux/arm64');
-      } else if (arch === 'x64') {
+      } else {
         return this.resolveRelativePath('natives/linux/x86_64');
       }
     }
