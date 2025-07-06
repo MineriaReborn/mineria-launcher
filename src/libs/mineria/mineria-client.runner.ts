@@ -52,6 +52,7 @@ export class MineriaClientRunner {
       cwd: gameDir,
       detached: launcherSettings.close === 'close-launcher',
       env: {
+        ...process.env,
         SHIM_MCCOMPAT: '0x800000001',
         GPU_MAX_HEAP_SIZE: '100',
         GPU_USE_SYNC_OBJECTS: '1',
