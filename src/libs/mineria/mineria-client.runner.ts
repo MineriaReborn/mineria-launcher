@@ -116,6 +116,8 @@ export class MineriaClientRunner {
     memory: Memory,
   ): string[] {
     return [
+      '-XstartOnFirstThread',
+      '-Djava.awt.headless=false',
       `-Xms${memory.min * 1024}M`,
       `-Xmx${memory.max * 1024}M`,
       `-XX:ReservedCodeCacheSize=512m`,
