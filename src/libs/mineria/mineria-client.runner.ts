@@ -109,12 +109,13 @@ export class MineriaClientRunner {
     resolution: Resolution,
     memory: Memory,
   ): string[] {
+    const isMac = os.platform() === 'darwin';
+
     return [
-      '-XstartOnFirstThread',
-      '-Djava.awt.headless=false',
+      ...(isMac ? ['-XstartOnFirstThread', '-Djava.awt.headless=false'] : []),
       `-Xms${memory.min * 1024}M`,
       `-Xmx${memory.max * 1024}M`,
-      `-XX:ReservedCodeCacheSize=512m`,
+      '-XX:ReservedCodeCacheSize=512m',
       `-Dorg.lwjgl.system.SharedLibraryExtractPath=${nativesPath}`,
       `-Djava.library.path=${nativesPath}`,
       '-cp',
