@@ -48,19 +48,35 @@ export class MineriaClientRunner {
 
     await this.javaDownloader.installJavaIfNotPresent();
 
-    const childProcess = spawn(this.javaPath, args, {
-      cwd: gameDir,
-      detached: launcherSettings.close === 'close-launcher',
-      env: {
-        ...process.env,
-        SHIM_MCCOMPAT: '0x800000001',
-        GPU_MAX_HEAP_SIZE: '100',
-        GPU_USE_SYNC_OBJECTS: '1',
+    const platform = os.platform();
+    const isLinux = platform === 'linux';
+    const isWindows = platform === 'win32';
+
+    const extraEnv: NodeJS.ProcessEnv = {};
+
+    if (isLinux) {
+      Object.assign(extraEnv, {
         __GL_THREADED_OPTIMIZATIONS: '1',
         __GL_SYNC_TO_VBLANK: '0',
         __GL_GSYNC_ALLOWED: '0',
         __GL_SHADER_CACHE: '1',
         __GL_SHADER_CACHE_SIZE: '100',
+        MESA_GLTHREAD: 'true',
+      });
+    }
+
+    if (isWindows) {
+      Object.assign(extraEnv, {
+        SHIM_MCCOMPAT: '0x800000001',
+      });
+    }
+
+    const childProcess = spawn(this.javaPath, args, {
+      cwd: gameDir,
+      detached: launcherSettings.close === 'close-launcher',
+      env: {
+        ...process.env,
+        ...extraEnv,
       },
     });
 

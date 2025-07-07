@@ -2,11 +2,18 @@ import { app, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
 import * as fs from 'fs';
+
+if (process.platform === 'darwin') {
+  app.commandLine.appendSwitch('use-angle', 'gl');
+  app.commandLine.appendSwitch('disable-gpu-compositing');
+}
+
 import {
   createLauncherWindow,
   destroyLauncherWindow,
   getLauncherWindow,
 } from './ui/launcher/launcher-window';
+
 import {
   createUpdaterWindow,
   destroyUpdaterWindow,
