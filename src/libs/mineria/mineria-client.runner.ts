@@ -56,12 +56,14 @@ export class MineriaClientRunner {
 
     if (isLinux) {
       Object.assign(extraEnv, {
+        __NV_PRIME_RENDER_OFFLOAD: '1',
+        __GLX_VENDOR_LIBRARY_NAME: 'nvidia',
         __GL_THREADED_OPTIMIZATIONS: '1',
+        __GL_SHADER_CACHE: '1',
+        MESA_GLTHREAD: 'true',
         __GL_SYNC_TO_VBLANK: '0',
         __GL_GSYNC_ALLOWED: '0',
-        __GL_SHADER_CACHE: '1',
         __GL_SHADER_CACHE_SIZE: '100',
-        MESA_GLTHREAD: 'true',
       });
     }
 
@@ -126,13 +128,13 @@ export class MineriaClientRunner {
     memory: Memory,
   ): string[] {
     const isMac = os.platform() === 'darwin';
+    const isArm64 = os.arch() === 'arm64';
 
     return [
-      ...(isMac ? ['-XstartOnFirstThread', '-Djava.awt.headless=false'] : []),
+      ...(isMac && !isArm64 ? ['-XstartOnFirstThread', '-Djava.awt.headless=false'] : []),
       `-Xms${memory.min * 1024}M`,
       `-Xmx${memory.max * 1024}M`,
       '-XX:ReservedCodeCacheSize=512m',
-      `-Dorg.lwjgl.system.SharedLibraryExtractPath=${nativesPath}`,
       `-Djava.library.path=${nativesPath}`,
       '-cp',
       classpath,

@@ -6,6 +6,7 @@ import * as fs from 'fs';
 if (process.platform === 'darwin') {
   app.commandLine.appendSwitch('use-angle', 'gl');
   app.commandLine.appendSwitch('disable-gpu-compositing');
+  app.commandLine.appendSwitch('force_high_performance_gpu');
 }
 
 import {
