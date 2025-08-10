@@ -1,107 +1,193 @@
 @import "../../assets/css/font.css";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+
+:root {
+  --brand: #FFB326;
+  --brand-2: #FFD36A;
+  --bg: #0B0D10;
+  --text: #E6E9EE;
+}
+
+html,
+body {
+  height: 100%
+}
 
 body {
-  background: linear-gradient(#1a191df1, #1a191df1),
-    url("../../assets/images/background.png") no-repeat center top;
-  backdrop-filter: blur(5px);
-  background-size: auto;
-  max-width: 400px;
-  margin: 0 auto;
-  letter-spacing: 0px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Arial;
+  font-weight: 500;
+  letter-spacing: .1px;
   -webkit-app-region: drag;
   user-select: none;
+  max-width: 400px;
+  margin: 0 auto;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
-img {
-  -webkit-user-drag: none;
-  user-select: none;
-}
-.spinner {
-  width: 100px;
-  height: 100px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #f0ad30;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.72)),
+    url("../../assets/images/background.png") center/cover no-repeat;
+  opacity: 0.18;
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
 }
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+
+.container {
+  display: inherit;
+  height: 450px;
+  width: 400px;
+  margin: 0 auto;
+  border-radius: 7px;
+  -webkit-app-region: no-drag;
+  transition: opacity .5s;
+}
+
+.icon {
+  -webkit-app-region: no-drag;
+  position: absolute;
+  right: 22px;
+  top: 15px;
+}
+
+.icon .cross {
+  display: inline-block;
+  margin-right: 10px
+}
+
+.icon .min {
+  display: inline-block
+}
+
+.cross:hover,
+.min:hover {
+  transform: scale(1.1);
+  transition: transform .3s
 }
 
 .loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: relative;
+  isolation: isolate;
   height: 100vh;
+  -webkit-app-region: no-drag;
 }
+
+.label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 150px;
+  height: 150px;
+  background: transparent linear-gradient(180deg, #9595955c 0%, #0000 100%) 0 0 no-repeat padding-box;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+
+@keyframes spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 128px;
+  height: 128px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid var(--brand);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  z-index: 2;
+  pointer-events: none;
+}
+
 
 .splash {
   position: absolute;
-  top: 180px;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%);
-  width: 0;
-  height: 0;
-  transition: opacity 0.3s, top 1.5s;
+  transform: translate(-50%, -50%) scale(0.01);
+  width: 128px;
+  height: 128px;
   opacity: 1;
+  transition: opacity .3s;
+  z-index: 3;
+  -webkit-app-region: no-drag;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, .35));
+  animation: splash-grow 1.3s cubic-bezier(.18, 1.2, .36, 1) forwards;
 }
 
-.splash.opacity {
-  opacity: 1;
-}
+@keyframes splash-grow {
+  0% {
+    transform: translate(-50%, -50%) scale(0.01);
+    opacity: 0.5;
+  }
 
-.splash.translate {
-  top: 129px;
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
 }
 
 .message {
-  font-family: "Poppins-Medium";
-  font-size: 15px;
   position: absolute;
+  left: 0;
   top: 347px;
-  left: 0px;
   width: 400px;
   text-align: center;
-  transition: opacity 1.5s;
-  font: normal normal normal 18px/27px Poppins-SemiBold;
-  color: rgb(255, 255, 255);
+  color: var(--text);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 500;
   opacity: 1;
+  transition: opacity 1.5s;
 }
 
 .message.opacity {
-  opacity: 1;
+  opacity: 1
 }
+
 
 progress {
   position: absolute;
   top: 410px;
   left: 106px;
   width: 189px;
-  height: 7px;
-  appearance: none;
-  transition: opacity 0.2s;
+  height: 8px;
   opacity: 0;
+  transition: opacity .25s ease;
 }
 
 progress.show {
-  opacity: 1;
+  opacity: 1
 }
 
 progress::-webkit-progress-bar {
-  background-color: #515151;
-  border-radius: 10px;
+  background: #515151;
+  border-radius: 10px
 }
 
 progress::-webkit-progress-value {
-  background: linear-gradient(90deg, #48754d 0px, #55a45d 100%);
+  background: linear-gradient(90deg, var(--brand) 0%, var(--brand-2) 100%);
   border-radius: 10px;
 }

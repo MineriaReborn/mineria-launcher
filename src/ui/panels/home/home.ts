@@ -122,19 +122,19 @@ export default class Home {
       });
 
       eventEmitter.on('client_downloaded', () => {
-        info.innerHTML = `Client téléchargé`;
+        info.innerHTML = `Jeu téléchargé`;
         progressBar.value = 100;
         progressBar.max = 100;
       });
 
       eventEmitter.on('java_download_progress', () => {
-        info.innerHTML = `Téléchargement de Java 8`;
+        info.innerHTML = `Téléchargement de Java`;
       });
 
       eventEmitter.on('game_started', () => {
         playBtn.style.filter = 'grayscale(100%)';
         playBtn.style.pointerEvents = 'none';
-        info.innerHTML = 'Mineria est lancé';
+        info.innerHTML = 'Le jeu est lancé';
 
         if (launcherSettings.close === 'close-launcher') {
           setInterval(() => {

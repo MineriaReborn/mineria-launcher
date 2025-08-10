@@ -2,155 +2,259 @@
 @import "../panels/login/login.css";
 @import "../panels/home/home.css";
 @import "../panels/settings/settings.css";
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css');
+
+:root {
+  --bg: #0B0D10;
+  --panel: #121418;
+  --panel-2: #151922;
+  --stroke: #1D212A;
+  --text: #E6E9EE;
+  --muted: #99A2B3;
+  --accent: #53B3F2;
+  --accent-2: #6BE675;
+  --radius: 14px;
+  --shadow: 0 12px 32px rgba(0, 0, 0, .35);
+  --titlebar: 36px;
+
+  --win-btn-w: 40px;
+  --win-btn-h: 26px;
+  --win-btn-radius: 6px;
+  --glyph: #E6E9EE;
+  --hover-bg: rgba(255, 255, 255, .08);
+  --close-hover-bg: #E81123;
+}
 
 * {
-  outline: none;
+  box-sizing: border-box;
+  outline: 0
+}
+
+html,
+body {
+  height: 100%
+}
+
+html {
+  overflow: hidden
 }
 
 body {
-
   margin: 0;
   padding: 0;
   user-select: none;
-  background: linear-gradient(rgba(23, 21, 23, 0.4), rgba(23, 21, 23, 0.974)),
-    url("../../assets/images/background.png") no-repeat center center scroll;
-  backdrop-filter: blur(5px);
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, Arial;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: url("../../assets/images/background.png") center/cover no-repeat;
+  opacity: 0.08;
+  filter: blur(3px);
+  -webkit-filter: blur(3px);
 }
 
 img {
   -webkit-user-drag: none;
-  user-select: none;
+  user-select: none
 }
+
 
 .dragbar {
   position: fixed;
-  background: #13131300;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 26px;
+
+  left: 85px;
+  right: 0;
+  height: var(--titlebar);
   -webkit-app-region: drag;
-  z-index: 11;
-  display: none;
+  z-index: 90;
+  background: transparent;
 }
 
 .frame {
-  background: transparent;
   position: fixed;
-  display: table;
-  top: 0px;
-  right: 0px;
-  z-index: 11;
+  top: 0;
+  right: 0;
+  height: var(--titlebar);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  z-index: 100;
   -webkit-app-region: no-drag;
-  display: none;
 }
 
-.hide {
-  display: block;
-}
-
-.button-frame {
+.frame .button-frame {
+  width: var(--win-btn-w);
+  height: var(--win-btn-h);
+  border-radius: var(--win-btn-radius);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  display: table-cell;
-  width: 30px;
-  height: 26px;
-  transition: color 0.2s, background-color 0.2s;
-  color: black;
   cursor: pointer;
+  background: transparent;
+  border: 0;
+  overflow: hidden;
+  will-change: background;
 }
 
-.icon-close:hover {
-  background: #e21212;
+.frame .button-frame::after {
+  content: "";
+  display: none !important;
 }
 
-.icon-minimize:hover,
-.icon-restore-down:hover,
-.icon-maximize:hover {
-  background-color: #00000042;
+#close::after {
+  display: block !important;
 }
 
-.icon-close:before,
-.icon-minimize:before,
-.icon-maximize:before,
-.icon-restore-down:before {
+.frame .button-frame:hover {
+  background: var(--hover-bg);
+}
+
+.frame #close:hover {
+  background: var(--close-hover-bg);
+}
+
+.frame .button-frame:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, .25);
+  outline-offset: 2px;
+  border-radius: calc(var(--win-btn-radius) + 1px);
+}
+
+#minimize::before,
+#maximize::before,
+#close::before,
+#close::after {
+  content: "";
   position: absolute;
-  top: 6px;
-  left: 8px;
-  width: 14px;
-  height: 14px;
-  font-size: 14px;
-  color: #f8f9f9;
-}
-.preload-content {
-  position: absolute;
-  top: 50%;
   left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  background: var(--glyph);
+  display: block;
+  border-radius: 2px;
+  z-index: 1;
+  pointer-events: none;
+}
 
+#minimize::before {
+  width: 14px;
+  height: 2px
+}
+
+#maximize {
+  display: none !important;
+}
+
+.icon-maximize,
+.icon-restore-down {
+  display: none !important;
+}
+
+#maximize::before {
+  width: 12px;
+  height: 12px;
+  background: transparent;
+  border: 2px solid var(--glyph);
+  border-radius: 3px;
+}
+
+#close::before,
+#close::after {
+  width: 14px;
+  height: 2px
+}
+
+#close::before {
+  transform: translate(-50%, -50%) rotate(45deg)
+}
+
+#close::after {
+  transform: translate(-50%, -50%) rotate(-45deg)
+}
+
+
+.preload-content {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: transparent;
 }
 
 .preload-progress {
-  position: absolute;
-  left: 50%;
-  top: 10%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  height: 100%;
+  position: fixed !important;
+  left: 50% !important;
+  top: calc((100vh + var(--titlebar)) / 2) !important;
+  transform: translate(-50%, -50%) !important;
+  width: 110px;
+  height: 110px;
 }
 
-.dot {
+.preload-progress::before {
+  content: "";
   position: absolute;
-  border-top: 16px solid #ffffff;
-  bottom: 0.2vh;
-  right: 80vh;
+  inset: 0;
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
-
+  border: 6px solid rgba(255, 255, 255, .08);
+  border-top-color: #fff;
+  animation: spin 1s linear infinite;
 }
 
 .noir {
   position: absolute;
-  backdrop-filter: blur(10px);
-  width: 100%;
-  height: 100%;
-  
+  inset: 0;
+  backdrop-filter: blur(6px)
 }
 
-
+.preload-title {
+  position: fixed;
+  left: 50%;
+  top: calc((100vh + var(--titlebar)) / 2 + 90px);
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: .2px;
+  text-align: center;
+}
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes dot {
-  50% {
-      transform: translateX(96px);
+  to {
+    transform: rotate(360deg)
   }
 }
 
-@keyframes dots {
-  50% {
-      transform: translateX(-31px);
-  }
+
+.panels {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+  padding-top: var(--titlebar);
 }
 
 .panel {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   opacity: 0;
-  z-index: 0;
+  transform: translateY(8px);
+  filter: blur(.3px);
+  transition: opacity .25s ease, transform .25s ease, filter .25s ease;
   pointer-events: none;
 }
 
 .active {
   opacity: 1;
-  z-index: 1;
-  pointer-events: all;
+  transform: none;
+  filter: none;
+  pointer-events: auto
 }
