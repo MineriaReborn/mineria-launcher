@@ -2,6 +2,7 @@ import { app, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import * as path from 'path';
 import * as fs from 'fs';
+import { execSync } from 'child_process';
 
 if (process.platform === 'darwin') {
   app.commandLine.appendSwitch('use-angle', 'gl');
@@ -28,6 +29,12 @@ if (process.env.NODE_ENV === 'dev') {
 }
 
 app.whenReady().then(() => {
+  let hash = 'unknown';
+  try {
+    hash = execSync('git rev-parse --short HEAD').toString().trim();
+  } catch (e) {}
+
+  process.env.APP_VERSION = `${app.getVersion()}-${hash}`;
   createUpdaterWindow();
 });
 

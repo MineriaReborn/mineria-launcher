@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { app } from 'electron';
 import { ChildProcessWithoutNullStreams, spawn } from 'node:child_process';
 import EventEmitter from 'node:events';
 import { JavaDownloader } from './java-downloader';
@@ -30,21 +31,13 @@ export class MineriaClientRunner {
 
   public async run(): Promise<void> {
     const nativesPath = this.getNativesPath();
-    const assetsPath = this.resolveRelativePath('assets');
     const gameDir = this.options.clientPath;
     const classpath = this.getLibrariesPaths();
     const memory = this.options.memory;
     const resolution = this.options.resolution;
     const launcherSettings = this.options.launcherSettings;
 
-    const args = this.buildJavaArguments(
-      classpath,
-      nativesPath,
-      assetsPath,
-      gameDir,
-      resolution,
-      memory,
-    );
+    const args = this.buildJavaArguments(classpath, nativesPath, gameDir, resolution, memory);
 
     await this.javaDownloader.installJavaIfNotPresent();
 
@@ -122,7 +115,6 @@ export class MineriaClientRunner {
   private buildJavaArguments(
     classpath: string,
     nativesPath: string,
-    assetsPath: string,
     gameDir: string,
     resolution: Resolution,
     memory: Memory,
@@ -141,25 +133,30 @@ export class MineriaClientRunner {
       'fr.mineria.wrapper.Main',
       '--username',
       this.options.account.username,
-      '--version',
-      '1.7.10',
       '--gameDir',
       gameDir,
-      '--assetsDir',
-      assetsPath,
-      '--assetIndex',
-      '1.7.10',
+      '--launcherVersion',
+      `${process.env.APP_VERSION ?? 'unknown'}-${this.getPlatform()}`,
       '--uuid',
       this.options.account.uuid,
       '--accessToken',
       this.options.account.access_token,
-      '--userProperties',
-      '{}',
       '--width',
       resolution.width.toString(),
       '--height',
       resolution.height.toString(),
     ];
+  }
+
+  private getPlatform(): string {
+    const platform = os.platform();
+    const arch = os.arch();
+
+    if (platform === 'win32') return arch === 'x64' ? 'win64' : 'win32';
+    if (platform === 'darwin') return arch === 'arm64' ? 'macos-arm64' : 'macos-x64';
+    if (arch === 'arm64') return 'linux-arm64';
+    if (arch === 'arm') return 'linux-arm32';
+    return arch === 'x64' ? 'linux64' : 'linux32';
   }
 
   private attachProcessListeners(childProcess: ChildProcessWithoutNullStreams): void {
