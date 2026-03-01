@@ -6,3 +6,4 @@ AppData
 /client
 /launcher
 .DS_Store
+src/git-hash.ts

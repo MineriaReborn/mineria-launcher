@@ -10,6 +10,6 @@
     "moduleResolution": "node",
     "sourceMap": false
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "scripts/inject-git-hash.js"],
   "exclude": ["node_modules"]
 }
