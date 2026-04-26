@@ -59,3 +59,17 @@ jobs:
           GH_TOKEN: ${{ secrets.github_token }}
         run: npm run release
         shell: bash
+
+  cleanup:
+    needs: [create-release, build-launcher]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Delete previous workflow runs (keep last)
+        uses: Mattraks/delete-workflow-runs@v2
+        with:
+          retain_days: 0
+          keep_minimum_runs: 1
+          delete_workflow_pattern: build.yml
