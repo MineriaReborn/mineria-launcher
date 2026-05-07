@@ -124,6 +124,7 @@ export class MineriaClientRunner {
 
     return [
       ...(isMac && !isArm64 ? ['-XstartOnFirstThread', '-Djava.awt.headless=false'] : []),
+      ...(isMac && isArm64 ? ['-XstartOnFirstThread', '-Djava.awt.headless=false'] : []),
       `-Xms${memory.min * 1024}M`,
       `-Xmx${memory.max * 1024}M`,
       '-XX:ReservedCodeCacheSize=512m',
