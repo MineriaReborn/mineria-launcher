@@ -22,6 +22,8 @@ const IGNORE_LIST = [
   'settings',
   'shaderpacks',
   'crash-reports',
+  'minecraft.enc',
+  'wrapper.jar',
   'options.txt',
   'optionsof.txt',
 ];
