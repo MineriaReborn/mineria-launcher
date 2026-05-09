@@ -85,6 +85,10 @@
     "mac": {
       "icon": "./dist/assets/images/icon.icns",
       "category": "public.app-category.games",
+      "entitlements": null,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Mineria utilise le microphone pour le chat vocal en jeu."
+      },
       "target": [
         {
           "target": "dmg",
