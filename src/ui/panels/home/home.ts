@@ -75,7 +75,7 @@ export default class Home {
 
     playBtn?.addEventListener('click', async () => {
       const account = this.store.get(StoreItem.Account);
-      /*const config = Config.getConfig();*/
+      const config = Config.getConfig();
       playBtn.disabled = true;
 
       if (!account) {
@@ -84,16 +84,12 @@ export default class Home {
         return;
       }
 
-      /*if (
-        !account ||
-        !config ||
-        (config.maintenance && !config.whitelist.includes(account.username))
-      ) {
-        info.innerHTML = `Serveur en maintenance`;
+      if (config?.maintenance && !config.whitelist.includes(account.username)) {
+        info.innerHTML = config.maintenance_message;
         playBtn.style.filter = 'grayscale(100%)';
         playBtn.style.pointerEvents = 'none';
         return;
-      }*/
+      }
 
       const memory = this.store.get(StoreItem.Memory);
       const resolution = this.store.get(StoreItem.Resolution);
@@ -119,22 +115,33 @@ export default class Home {
         info.innerHTML = `Téléchargement ${percentage.toFixed(0)}%`;
         progressBar.value = progress;
         progressBar.max = size;
+        ipcRenderer.send('main-window-progress', progress / size);
       });
 
       eventEmitter.on('client_downloaded', () => {
         info.innerHTML = `Jeu téléchargé`;
         progressBar.value = 100;
         progressBar.max = 100;
+        ipcRenderer.send('main-window-progress', -1);
       });
 
-      eventEmitter.on('java_download_progress', () => {
-        info.innerHTML = `Téléchargement de Java`;
+      eventEmitter.on('java_download_progress', (progress?: number, size?: number) => {
+        if (progress !== undefined && size && size > 0) {
+          const percentage = (progress / size) * 100;
+          info.innerHTML = `Téléchargement de Java ${percentage.toFixed(0)}%`;
+          progressBar.value = progress;
+          progressBar.max = size;
+          ipcRenderer.send('main-window-progress', progress / size);
+        } else {
+          info.innerHTML = `Téléchargement de Java`;
+        }
       });
 
       eventEmitter.on('game_started', () => {
         playBtn.style.filter = 'grayscale(100%)';
         playBtn.style.pointerEvents = 'none';
         info.innerHTML = 'Le jeu est lancé';
+        ipcRenderer.send('main-window-progress', -1);
 
         if (launcherSettings.close === 'close-launcher') {
           setInterval(() => {
@@ -150,6 +157,7 @@ export default class Home {
         info.innerHTML = 'Attente de lancement.';
         progressBar.value = 0;
         progressBar.max = 0;
+        ipcRenderer.send('main-window-progress', -1);
       });
 
       await downloader.install();

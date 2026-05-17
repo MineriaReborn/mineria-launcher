@@ -49,6 +49,7 @@ ipcMain.on('main-window-maximize', () => {
 });
 ipcMain.on('main-window-hide', () => getLauncherWindow()?.hide());
 ipcMain.on('main-window-show', () => getLauncherWindow()?.show());
+ipcMain.on('main-window-progress', (_, value: number) => getLauncherWindow()?.setProgressBar(value));
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();

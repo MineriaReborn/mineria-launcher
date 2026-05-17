@@ -30,14 +30,13 @@ export class MineriaClientRunner {
   }
 
   public async run(): Promise<void> {
-    const nativesPath = this.getNativesPath();
     const gameDir = this.options.clientPath;
     const classpath = this.getLibrariesPaths();
     const memory = this.options.memory;
     const resolution = this.options.resolution;
     const launcherSettings = this.options.launcherSettings;
 
-    const args = this.buildJavaArguments(classpath, nativesPath, gameDir, resolution, memory);
+    const args = this.buildJavaArguments(classpath, gameDir, resolution, memory);
 
     await this.javaDownloader.installJavaIfNotPresent();
 
@@ -53,10 +52,12 @@ export class MineriaClientRunner {
         __GLX_VENDOR_LIBRARY_NAME: 'nvidia',
         __GL_THREADED_OPTIMIZATIONS: '1',
         __GL_SHADER_CACHE: '1',
-        MESA_GLTHREAD: 'true',
+        __GL_SHADER_CACHE_SIZE: '100',
+        __GL_MaxFramesAllowed: '1',
         __GL_SYNC_TO_VBLANK: '0',
         __GL_GSYNC_ALLOWED: '0',
-        __GL_SHADER_CACHE_SIZE: '100',
+        MESA_GLTHREAD: 'true',
+        mesa_glthread: 'true',
       });
     }
 
@@ -78,29 +79,6 @@ export class MineriaClientRunner {
     this.attachProcessListeners(childProcess);
   }
 
-  private getNativesPath(): string {
-    const platform = os.platform();
-    const arch = os.arch();
-
-    if (platform === 'win32') {
-      return this.resolveRelativePath('natives/win');
-    } else if (platform === 'darwin') {
-      if (arch === 'arm64') {
-        return this.resolveRelativePath('natives/osx/arm64');
-      } else {
-        return this.resolveRelativePath('natives/osx/x86_64');
-      }
-    } else if (platform === 'linux') {
-      if (arch === 'arm64') {
-        return this.resolveRelativePath('natives/linux/arm64');
-      } else {
-        return this.resolveRelativePath('natives/linux/x86_64');
-      }
-    }
-
-    throw new Error(`Unsupported platform/arch combination: ${platform} ${arch}`);
-  }
-
   private getLibrariesPaths(): string {
     const libsDir = this.resolveRelativePath('libraries');
     const libFiles = fs.readdirSync(libsDir).map((lib) => path.join(libsDir, lib));
@@ -114,20 +92,32 @@ export class MineriaClientRunner {
 
   private buildJavaArguments(
     classpath: string,
-    nativesPath: string,
     gameDir: string,
     resolution: Resolution,
     memory: Memory,
   ): string[] {
-    const isMac = os.platform() === 'darwin';
-    const isArm64 = os.arch() === 'arm64';
+    const platform = os.platform();
+    const launcherVersion = `${process.env.APP_VERSION ?? 'unknown'}-${this.getPlatform()}`;
 
     return [
-      ...(isMac && !isArm64 ? ['-XstartOnFirstThread', '-Djava.awt.headless=false'] : []),
+      ...(platform === 'darwin' ? ['-XstartOnFirstThread'] : []),
+      ...(platform === 'win32'
+        ? ['-XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump']
+        : []),
       `-Xms${memory.min * 1024}M`,
       `-Xmx${memory.max * 1024}M`,
-      '-XX:ReservedCodeCacheSize=512m',
-      `-Djava.library.path=${nativesPath}`,
+      '-XX:+UseZGC',
+      '-XX:+AlwaysPreTouch',
+      '-XX:+UseStringDeduplication',
+      '--enable-native-access=ALL-UNNAMED',
+      '--sun-misc-unsafe-memory-access=allow',
+      '--add-opens', 'java.base/java.lang=ALL-UNNAMED',
+      '--add-opens', 'java.base/java.lang.reflect=ALL-UNNAMED',
+      '--add-opens', 'java.base/java.io=ALL-UNNAMED',
+      '--add-opens', 'java.base/java.nio=ALL-UNNAMED',
+      '--add-opens', 'java.base/java.util=ALL-UNNAMED',
+      '--add-opens', 'java.base/java.util.concurrent=ALL-UNNAMED',
+      '--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED',
       '-cp',
       classpath,
       'fr.mineria.wrapper.Main',
@@ -136,7 +126,7 @@ export class MineriaClientRunner {
       '--gameDir',
       gameDir,
       '--launcherVersion',
-      `${process.env.APP_VERSION ?? 'unknown'}-${this.getPlatform()}`,
+      launcherVersion,
       '--uuid',
       this.options.account.uuid,
       '--accessToken',

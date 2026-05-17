@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
 import { createGunzip } from 'node:zlib';
-import { pipeline } from 'node:stream';
+import { pipeline, Transform } from 'node:stream';
 import { promisify } from 'node:util';
 import * as tar from 'tar';
 import unzipper from 'unzipper';
@@ -17,8 +17,20 @@ export class JavaDownloader {
   ) {}
 
   public async installJavaIfNotPresent(): Promise<void> {
+    const javaFolder = path.join(this.clientPath, 'java');
+
+    if (fs.existsSync(javaFolder)) {
+      const contents = fs.readdirSync(javaFolder);
+      const isClean = contents.length === 0 || (contents.length === 1 && contents[0] === 'java25');
+
+      if (!isClean) {
+        console.log(`[java] Inconsistent state in ${javaFolder} (${contents.join(', ')}), wiping`);
+        fs.rmSync(javaFolder, { recursive: true, force: true });
+      }
+    }
+
     if (fs.existsSync(this.getJavaBinaryPath())) {
-      console.log(`✔ Java 8 detected at ${this.getJavaBinaryPath()}`);
+      console.log(`✔ Java 25 detected at ${this.getJavaBinaryPath()}`);
       return;
     }
 
@@ -30,21 +42,21 @@ export class JavaDownloader {
     const platform = os.platform();
 
     if (platform === 'darwin') {
-      return path.join(this.clientPath, 'java', 'java8', 'Contents', 'Home', 'bin', 'java');
+      return path.join(this.clientPath, 'java', 'java25', 'Contents', 'Home', 'bin', 'java');
     }
 
     if (platform === 'win32') {
-      return path.join(this.clientPath, 'java', 'java8', 'bin', 'javaw.exe');
+      return path.join(this.clientPath, 'java', 'java25', 'bin', 'javaw.exe');
     }
 
-    return path.join(this.clientPath, 'java', 'java8', 'bin', 'java');
+    return path.join(this.clientPath, 'java', 'java25', 'bin', 'java');
   }
 
   private async install(): Promise<void> {
     const url = this.getDownloadUrl();
     const archivePath = await this.downloadArchive(url);
-    await this.extractArchive(archivePath, url);
-    console.log('✅ Corretto 8 installation complete.');
+    await this.extractArchive(archivePath);
+    console.log('✅ Temurin 25 installation complete.');
   }
 
   private getDownloadUrl(): string {
@@ -52,28 +64,29 @@ export class JavaDownloader {
     const arch = os.arch();
 
     if (platform === 'darwin') {
-      return arch === 'arm64'
-        ? 'https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-macos-jdk.tar.gz'
-        : 'https://corretto.aws/downloads/latest/amazon-corretto-8-x64-macos-jdk.tar.gz';
+      const adoptiumArch = arch === 'arm64' ? 'aarch64' : 'x64';
+      return `https://api.adoptium.net/v3/binary/latest/25/ga/mac/${adoptiumArch}/jdk/hotspot/normal/eclipse`;
     }
 
     if (platform === 'win32') {
-      return arch === 'x64'
-        ? 'https://corretto.aws/downloads/latest/amazon-corretto-8-x64-windows-jre.zip'
-        : 'https://corretto.aws/downloads/latest/amazon-corretto-8-x86-windows-jre.zip';
+      return 'https://api.adoptium.net/v3/binary/latest/25/ga/windows/x64/jdk/hotspot/normal/eclipse';
     }
 
     if (platform === 'linux') {
-      return arch === 'arm64'
-        ? 'https://corretto.aws/downloads/latest/amazon-corretto-8-aarch64-linux-jdk.tar.gz'
-        : 'https://corretto.aws/downloads/latest/amazon-corretto-8-x64-linux-jdk.tar.gz';
+      const adoptiumArch = arch === 'arm64' ? 'aarch64' : 'x64';
+      return `https://api.adoptium.net/v3/binary/latest/25/ga/linux/${adoptiumArch}/jdk/hotspot/normal/eclipse`;
     }
 
     throw new Error(`Unsupported platform/arch: ${platform}/${arch}`);
   }
 
+  private isZipFormat(): boolean {
+    return os.platform() === 'win32';
+  }
+
   private async downloadArchive(url: string): Promise<string> {
-    const dest = path.join(os.tmpdir(), path.basename(url));
+    const ext = this.isZipFormat() ? 'zip' : 'tar.gz';
+    const dest = path.join(os.tmpdir(), `temurin-25.${ext}`);
 
     console.log(`⬇ Downloading ${url}...`);
     const res = await fetch(url);
@@ -82,7 +95,20 @@ export class JavaDownloader {
       throw new Error(`Failed to fetch ${url}: ${res.statusText}`);
     }
 
-    await streamPipeline(res.body, fs.createWriteStream(dest));
+    const totalSize = Number(res.headers.get('content-length') ?? 0);
+    let downloaded = 0;
+
+    const progressStream = new Transform({
+      transform: (chunk, _encoding, callback) => {
+        downloaded += chunk.length;
+        if (totalSize > 0) {
+          this.eventEmitter.emit('java_download_progress', downloaded, totalSize);
+        }
+        callback(null, chunk);
+      },
+    });
+
+    await streamPipeline(res.body, progressStream, fs.createWriteStream(dest));
 
     const { size } = fs.statSync(dest);
     if (size === 0) {
@@ -92,27 +118,27 @@ export class JavaDownloader {
     return dest;
   }
 
-  private async extractArchive(archivePath: string, url: string): Promise<void> {
+  private async extractArchive(archivePath: string): Promise<void> {
     const javaRootFolder = path.join(this.clientPath, 'java');
-    if (!fs.existsSync(javaRootFolder)) {
-      fs.mkdirSync(javaRootFolder, { recursive: true });
+
+    if (fs.existsSync(javaRootFolder)) {
+      fs.rmSync(javaRootFolder, { recursive: true, force: true });
     }
+    fs.mkdirSync(javaRootFolder, { recursive: true });
 
-    console.log(`📦 Extracting Java 8 to: ${javaRootFolder}...`);
+    console.log(`📦 Extracting Java 25 to: ${javaRootFolder}...`);
 
-    if (url.endsWith('.zip')) {
+    if (this.isZipFormat()) {
       await streamPipeline(
         fs.createReadStream(archivePath),
         unzipper.Extract({ path: javaRootFolder }),
       );
-    } else if (url.endsWith('.tar.gz')) {
+    } else {
       await streamPipeline(
         fs.createReadStream(archivePath),
         createGunzip(),
         tar.x({ cwd: javaRootFolder }),
       );
-    } else {
-      throw new Error('Unsupported archive format');
     }
 
     const contents = fs.readdirSync(javaRootFolder);
@@ -125,9 +151,19 @@ export class JavaDownloader {
     }
 
     const originalPath = path.join(javaRootFolder, firstDir);
-    const newPath = path.join(javaRootFolder, 'java8');
+    const newPath = path.join(javaRootFolder, 'java25');
 
-    fs.renameSync(originalPath, newPath);
+    for (let i = 0; i < 10; i++) {
+      try {
+        fs.renameSync(originalPath, newPath);
+        break;
+      } catch (err: unknown) {
+        const code = (err as NodeJS.ErrnoException).code;
+        if (code !== 'EPERM' && code !== 'EBUSY' && code !== 'ENOTEMPTY') throw err;
+        if (i === 9) throw err;
+        await new Promise((r) => setTimeout(r, 250 * (i + 1)));
+      }
+    }
 
     console.log(`✅ Extracted and renamed to: ${newPath}`);
   }

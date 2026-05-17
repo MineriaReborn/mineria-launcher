@@ -12,20 +12,17 @@ import { UnusedFilesCleaner } from './unused-files.cleaner';
 const streamPipeline = promisify(pipeline);
 
 const IGNORE_LIST = [
-  'assets',
   'java',
-  'libraries',
   'logs',
-  'natives',
   'resourcepacks',
   'saves',
+  'skins',
   'settings',
   'shaderpacks',
   'crash-reports',
-  'minecraft.enc',
-  'wrapper.jar',
   'options.txt',
   'optionsof.txt',
+  'optionsshaders.txt',
 ];
 
 type DownloadableFile = {
